@@ -7,7 +7,7 @@ router.route('/:userId')
 
 // /api/thoughts/<userId>/<thoughtId>
 // addReaction is a Put, as we are updating a thought
-router.route('/:thoughtId')
+router.route('/:id')
     .get(getOneThought)
     .put(updateThought)
     .delete(removeThought);
