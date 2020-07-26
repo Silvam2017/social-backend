@@ -12,7 +12,6 @@ const UserSchema = new Schema({
         type: String,
         unique: true,
         required: 'Email Address is Required',
-        validate: [validateEmail, 'Please use a valid email address.'],
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please use a valid email address.']
         },
     thoughts: [
@@ -40,7 +39,7 @@ const UserSchema = new Schema({
 UserSchema.virtual('friendCount').get(function() {
     // this function differs from the module, in that we do not need to add replies and comments togethers.
     return this.friends.length
-});
+})
 
 //create the User model using the UserSchema
 const User = model('User', UserSchema);

@@ -1,6 +1,34 @@
 const { Thought, User } = require('../models');
 
 const thoughtController ={
+    getAllThought(req,res) {
+        Thought.find({})
+            .populate({
+                path: 'reactions'
+            })
+            .then(dbUserData => res.json(dbUserData))
+            .catch(err => {
+                console.log(err);
+                res.status(500).json(err)
+            })
+    },
+    getOneThought({ params }, res) {
+        Thought.findOne({ _id: params.id })
+            .populate({
+                path: 'reactions'
+            })
+            .then(dbUserData => {
+                if (!dbUserData) {
+                    res.status(404).json({ message: 'No thought found with this id.' });
+                    return;
+                }
+                res.json(dbUserData)
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(500).json(err);
+            })
+    },
     addThought({ params, body }, res) {
         Thought.create(body)
             .then(({ _id }) => {
@@ -18,6 +46,20 @@ const thoughtController ={
                 res.json(dbUserData);
             })
             .catch(err => res.json(err));
+    },
+    updateThought({ params, body }, res) {
+        Thought.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
+        .then(dbUserData => {
+            if (!dbUserData) {
+                res.status(404).json({ message: 'No thought found with this id. ' });
+                return;
+            }
+            res.json(dbUserData)
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json(err);
+        })
     },
     addReaction({ params, body}, res) {
         Thought.findByIdAndUpdate(
